@@ -20,6 +20,8 @@ const MongoStore = require("connect-mongo");
 const passport = require("passport");
 const pass = require("./passport/local");
 const parseArgs = require("minimist");
+const compression = require("compression");
+const logger = require("./winstonConfig");
 const app = express();
 
 //SERVIDOR HTTP CON FUNCIONALIDADES DE APP (EXPRESS)
@@ -28,6 +30,7 @@ const httpServer = http.createServer(app);
 const socketServer = new ioServer(httpServer);
 
 //middlewares
+app.use(compression());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(
@@ -45,7 +48,7 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 //middleware para cargar archivos
-//app.use(express.static(__dirname + "/public"));
+app.use(express.static(__dirname + "/public"));
 
 //MOTOR DE PLANTILLAS
 app.set("view engine", "hbs");
@@ -114,20 +117,34 @@ socketServer.on("connection", (socket) => {
     });
   });
 });
-
+function logWinston(req, res, next) {
+  logger.info(`Ruta ${req.originalUrl}, method ${req.method}`);
+  next();
+}
 //RUTAS
 app.use("/productos", rutasProducto);
 app.use("/api/productos-test", rutasTest);
 app.use("/info", infoRutas);
 app.use("/api/randoms/", randomsRutas);
 app.use("/", loginRutas);
+app.use("*", (req, res, next) => {
+  const err = new Error("Not Found");
+  err.status = 404;
+  next(err);
+});
+app.use((err, req, res, next) => {
+  if (err) {
+    logger.warn(`ruta inexistente`);
+    res.send(`ruta inexistente`);
+  }
+});
 //PUERTO
 
 const arg = parseArgs(process.argv.slice(2));
 
 const PORT = process.env.PORT || 8080;
 const server = httpServer.listen(PORT, () => {
-  console.log(`Sever started on ${PORT} proceso ${process.pid}`);
+  logger.info(`Sever started on ${PORT} proceso ${process.pid}`);
 });
 //por si hay errores en el servidor
-server.on("error", (error) => console.log(`error en el servidor ${error}`));
+server.on("error", (error) => logger.error(`error en el servidor ${error}`));

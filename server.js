@@ -91,42 +91,65 @@ const normalizar = (data) => {
 };
 
 socketServer.on("connection", (socket) => {
-  productosDB.getAll().then((productos) => {
-    socket.emit("datosTabla", productos);
-  });
+  productosDB
+    .getAll()
+    .then((productos) => {
+      console.log(productos);
+      socket.emit("datosTabla", productos);
+    })
+    .catch((err) => {
+      logger.error(err);
+    });
   socket.on("nuevo-producto", async (producto) => {
     await productosDB.save(producto);
-    productosDB.getAll().then((productos) => {
-      socketServer.sockets.emit("datosTabla", productos);
-    });
+    productosDB
+      .getAll()
+      .then((productos) => {
+        socketServer.sockets.emit("datosTabla", productos);
+      })
+      .catch((err) => {
+        logger.error(err);
+      });
   });
 
-  mensajesDB.getAllMessages().then((res) => {
-    //console.log(JSON.stringify(res));
-    const data = normalizar(JSON.parse(JSON.stringify(res)));
-    console.log("DATA NORMALIZADA", inspect(data, false, 12, true));
-    socket.emit("datosMensajes", data);
-  });
+  mensajesDB
+    .getAllMessages()
+    .then((res) => {
+      //console.log(JSON.stringify(res));
+      const data = normalizar(JSON.parse(JSON.stringify(res)));
+      console.log("DATA NORMALIZADA", inspect(data, false, 12, true));
+      socket.emit("datosMensajes", data);
+    })
+    .catch((err) => {
+      logger.error(err);
+    });
 
   socket.on("nuevo-mensaje", async (mensaje) => {
     console.log(mensaje);
     await mensajesDB.save(mensaje);
-    await mensajesDB.getAllMessages().then((res) => {
-      const data = normalizar(JSON.parse(JSON.stringify(res)));
-      socketServer.sockets.emit("datosMensajes", data);
-    });
+    await mensajesDB
+      .getAllMessages()
+      .then((res) => {
+        const data = normalizar(JSON.parse(JSON.stringify(res)));
+        socketServer.sockets.emit("datosMensajes", data);
+      })
+      .catch((err) => {
+        logger.error(err);
+      });
   });
 });
+
 function logWinston(req, res, next) {
   logger.info(`Ruta ${req.originalUrl}, method ${req.method}`);
   next();
 }
 //RUTAS
-app.use("/productos", rutasProducto);
-app.use("/api/productos-test", rutasTest);
-app.use("/info", infoRutas);
-app.use("/api/randoms/", randomsRutas);
-app.use("/", loginRutas);
+app.use("/productos", logWinston, rutasProducto);
+app.use("/api/productos-test", logWinston, rutasTest);
+app.use("/info", logWinston, infoRutas);
+app.use("/api/randoms", logWinston, randomsRutas);
+app.use("/", logWinston, loginRutas);
+app.get("*.ico", function () {});
 app.use("*", (req, res, next) => {
   const err = new Error("Not Found");
   err.status = 404;

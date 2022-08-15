@@ -148,7 +148,7 @@ app.use("/info", logWinston, infoRutas);
 app.use("/api/randoms", logWinston, randomsRutas);
 app.use("/", logWinston, loginRutas);
 app.get("*.ico", function () {});
-app.use("*", (req, res, next) => {
+/* app.use("*", (req, res, next) => {
   const err = new Error("Not Found");
   err.status = 404;
   next(err);
@@ -158,7 +158,7 @@ app.use((err, req, res, next) => {
     logger.warn(`ruta inexistente`);
     res.send(`ruta inexistente`);
   }
-});
+}); */
 //PUERTO
 
 const arg = parseArgs(process.argv.slice(2));

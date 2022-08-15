@@ -1,7 +1,6 @@
 const express = require("express");
 require("dotenv").config({ path: "./DBconfig/.env" });
 const rutasProducto = require("./routes/productosRutas");
-const rutasTest = require("./routes/productosTestRutas");
 const loginRutas = require("./routes/loginRutas");
 const infoRutas = require("./routes/infoRutas");
 const randomsRutas = require("./routes/randomsRutas");

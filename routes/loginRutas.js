@@ -4,7 +4,7 @@ const router = Router();
 const passport = require("passport");
 //cuando le pegan al endpoint / render index.hbs
 router.get("/", (req, res) => {
-  res.render("layouts\\login", { layout: "login" });
+  res.render("layouts/login", { layout: "login" });
 });
 router.get("/registro", (req, res) => {
   res.render("layouts\\registro", { layout: "registro" });

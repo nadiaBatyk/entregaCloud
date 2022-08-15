@@ -7,7 +7,7 @@ router.get("/", (req, res) => {
   res.render("layouts/login", { layout: "login" });
 });
 router.get("/registro", (req, res) => {
-  res.render("layouts\\registro", { layout: "registro" });
+  res.render("layouts/registro", { layout: "registro" });
 });
 router.post(
   "/registro",
@@ -17,7 +17,7 @@ router.post(
   })
 );
 router.get("/errorRegistro", (req, res) => {
-  res.render("layouts\\errorRegistro", { layout: "errorRegistro" });
+  res.render("layouts/errorRegistro", { layout: "errorRegistro" });
 });
 
 router.post(
@@ -29,11 +29,11 @@ router.post(
 );
 
 router.get("/errorLogin", (req, res) => {
-  res.render("layouts\\errorLogin", { layout: "errorLogin" });
+  res.render("layouts/errorLogin", { layout: "errorLogin" });
 });
 
 router.get("/logout", (req, res) => {
-  res.render("layouts\\logout", {
+  res.render("layouts/logout", {
     layout: "logout",
     email: req.user.email,
   });

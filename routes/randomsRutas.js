@@ -5,7 +5,7 @@ function isAuth(req, res, next) {
   if (req.isAuthenticated()) {
     next();
   } else {
-    res.render("layouts\\login", { layout: "login" });
+    res.render("layouts/login", { layout: "login" });
   }
 }
 let randomGen = (cantidad) => {
@@ -23,7 +23,7 @@ router.get("/", (req, res) => {
 
   const objeto = randomGen(cant);
 
-  res.render("layouts\\randoms", {
+  res.render("layouts/randoms", {
     layout: "randoms",
     objeto,
   });

@@ -7,7 +7,7 @@ function isAuth(req, res, next) {
   if (req.isAuthenticated()) {
     next();
   } else {
-    res.render("layouts\\login", { layout: "login" });
+    res.render("layouts/login", { layout: "login" });
   }
 }
 //cuando le pegan al endpoint / render index.hbs
@@ -22,7 +22,7 @@ router.get("/", (req, res) => {
     carpeta: process.cwd(),
     CantProcesadores: os.cpus().length,
   };
-  res.render("layouts\\info", {
+  res.render("layouts/info", {
     layout: "info",
     data,
   });

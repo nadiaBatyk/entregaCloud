@@ -145,7 +145,6 @@ function logWinston(req, res, next) {
 }
 //RUTAS
 app.use("/productos", logWinston, rutasProducto);
-app.use("/api/productos-test", logWinston, rutasTest);
 app.use("/info", logWinston, infoRutas);
 app.use("/api/randoms", logWinston, randomsRutas);
 app.use("/", logWinston, loginRutas);
